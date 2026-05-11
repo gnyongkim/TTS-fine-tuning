@@ -1,0 +1,114 @@
+# =============================================================================
+# GPT-SoVITS Korean Fine-tuning Project — .gitignore
+# =============================================================================
+
+# ---------- 운영체제 / 에디터 ----------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+.eggs/
+.Python
+build/
+dist/
+develop-eggs/
+.installed.cfg
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# 가상환경
+.venv/
+venv/
+env/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_meta
+
+# ---------- GPT-SoVITS 본체 ----------
+# setup.sh가 서버에서 별도 clone 받으므로 본 저장소에서는 추적하지 않음
+GPT-SoVITS/
+
+# ---------- 데이터셋 (절대 커밋 금지) ----------
+data/
+datasets/
+raw_audio/
+processed_audio/
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.m4a
+*.opus
+# 단, 문서용 샘플 1~2개만 두고 싶다면 강제 추가:  git add -f docs/samples/example.wav
+
+# 텍스트 라벨도 보통 데이터셋에 포함되므로 함께 제외
+*.lab
+*.TextGrid
+
+# 슬라이싱/전처리 산출물
+slices/
+list/
+*.list
+*.txt.bak
+
+# ---------- 모델 / 체크포인트 (절대 커밋 금지) ----------
+checkpoints/
+ckpt/
+weights/
+pretrained_models/
+logs/
+runs/
+*.ckpt
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.onnx
+*.engine
+*.npz
+
+# ---------- 결과물 / 합성 샘플 ----------
+outputs/
+results/
+generated/
+TEMP/
+tmp/
+temp/
+
+# ---------- 학습 로그 / wandb / tensorboard ----------
+wandb/
+mlruns/
+events.out.tfevents.*
+
+# ---------- 환경 변수 / 비밀 ----------
+.env
+.env.*
+*.pem
+*.key
+secrets/
+
+# ---------- 압축 / 다운로드 ----------
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+
+# ---------- 기타 ----------
+*.log
+*.pid
+*.lock
+node_modules/
