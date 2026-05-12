@@ -31,10 +31,13 @@ bash setup.sh --device CU126 --source ModelScope --uvr5
 # 3. 검증
 conda activate gptsovits
 python verify.py
+
+# 4. 한국어 데이터셋 준비 (KSS 자동 다운로드 + GPT-SoVITS 형식 변환)
+python scripts/prepare_kss.py --out-dir ~/data/kss_processed
 ```
 
 성공하면 모든 항목이 `[ OK ]` 로 표시됩니다. 자세한 단계·옵션·트러블슈팅은
-[`docs/02_설치_가이드.md`](docs/02_설치_가이드.md) 를 참고하세요.
+[`docs/02_설치_가이드.md`](docs/02_설치_가이드.md) 와 [`docs/03_데이터셋_준비.md`](docs/03_데이터셋_준비.md) 를 참고하세요.
 
 ---
 
@@ -47,9 +50,12 @@ python verify.py
 ├── .gitignore                      ← 데이터셋·체크포인트·모델 가중치 등 제외
 ├── setup.sh                        ← 학습 서버용 자동 설치 스크립트
 ├── verify.py                       ← 설치 검증 스크립트
+├── scripts/
+│   └── prepare_kss.py              ← KSS 다운로드 + GPT-SoVITS 학습 형식 변환
 └── docs/
     ├── 01_모델선정_비교.md          ← 후보 모델 비교 및 GPT-SoVITS v2 선정 사유
-    └── 02_설치_가이드.md            ← 단계별 설치·검증·트러블슈팅
+    ├── 02_설치_가이드.md            ← 단계별 설치·검증·트러블슈팅
+    └── 03_데이터셋_준비.md          ← KSS 다운로드·전처리·라이선스 가이드
 ```
 
 > **주의:** `setup.sh` 실행 시 `~/projects/GPT-SoVITS` 에 GPT-SoVITS 본체가
@@ -87,9 +93,9 @@ python verify.py
 
 - [x] 0. 모델 선정 — GPT-SoVITS v2 ([01_모델선정_비교.md](docs/01_모델선정_비교.md))
 - [x] 1. 학습 서버 자동 설치 스크립트 ([02_설치_가이드.md](docs/02_설치_가이드.md))
-- [ ] 2. 한국어 공개 데이터셋 준비 (KSS 1차 → AIHub 확장)
-- [ ] 3. 데이터 전처리 파이프라인 (다운샘플링, VAD, 텍스트 정규화)
-- [ ] 4. GPT(s1) / SoVITS(s2) 베이스라인 파인튜닝
+- [x] 2. 한국어 데이터셋 준비 — KSS 베이스라인 ([03_데이터셋_준비.md](docs/03_데이터셋_준비.md))
+      *비상업 검증용. 상용 모델은 라이선스 호환 데이터셋으로 재학습.*
+- [ ] 3. GPT(s1) / SoVITS(s2) 베이스라인 파인튜닝
 - [ ] 5. 평가 (MOS, CER/WER, RTF)
 - [ ] 6. ONNX export (s1.onnx, s2.onnx)
 - [ ] 7. INT8 양자화 + ONNX Runtime Mobile 검증
