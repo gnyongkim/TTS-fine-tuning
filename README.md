@@ -34,10 +34,18 @@ python verify.py
 
 # 4. 한국어 데이터셋 준비 (KSS 자동 다운로드 + GPT-SoVITS 형식 변환)
 python scripts/prepare_kss.py --out-dir ~/data/kss_processed
+
+# 5. 파인튜닝 (전처리 → s1 → s2)
+source configs/experiment.env
+python scripts/preprocess_for_training.py     # 30~60분
+bash   scripts/train_s1.sh                    # GPT,    6~10시간 (tmux 권장)
+bash   scripts/train_s2.sh                    # SoVITS, 8~14시간 (s1 끝난 뒤)
 ```
 
 성공하면 모든 항목이 `[ OK ]` 로 표시됩니다. 자세한 단계·옵션·트러블슈팅은
-[`docs/02_설치_가이드.md`](docs/02_설치_가이드.md) 와 [`docs/03_데이터셋_준비.md`](docs/03_데이터셋_준비.md) 를 참고하세요.
+[`docs/02_설치_가이드.md`](docs/02_설치_가이드.md) /
+[`docs/03_데이터셋_준비.md`](docs/03_데이터셋_준비.md) /
+[`docs/04_파인튜닝_가이드.md`](docs/04_파인튜닝_가이드.md) 를 참고하세요.
 
 ---
 
@@ -50,12 +58,20 @@ python scripts/prepare_kss.py --out-dir ~/data/kss_processed
 ├── .gitignore                      ← 데이터셋·체크포인트·모델 가중치 등 제외
 ├── setup.sh                        ← 학습 서버용 자동 설치 스크립트
 ├── verify.py                       ← 설치 검증 스크립트
+├── configs/
+│   ├── experiment.env              ← 공통 환경변수 (경로/GPU/실험명)
+│   ├── s1_kss.yaml                 ← GPT(s1) 학습 config (4070 Ti 12GB 튜닝)
+│   └── s2_kss.json                 ← SoVITS(s2) 학습 config (4070 Ti 12GB 튜닝)
 ├── scripts/
-│   └── prepare_kss.py              ← KSS 다운로드 + GPT-SoVITS 학습 형식 변환
+│   ├── prepare_kss.py              ← KSS 다운로드 + GPT-SoVITS 학습 형식 변환
+│   ├── preprocess_for_training.py  ← .list → BERT/HuBERT/semantic 일괄 추출
+│   ├── train_s1.sh                 ← GPT(s1) 학습 launcher
+│   └── train_s2.sh                 ← SoVITS(s2) 학습 launcher
 └── docs/
     ├── 01_모델선정_비교.md          ← 후보 모델 비교 및 GPT-SoVITS v2 선정 사유
     ├── 02_설치_가이드.md            ← 단계별 설치·검증·트러블슈팅
-    └── 03_데이터셋_준비.md          ← KSS 다운로드·전처리·라이선스 가이드
+    ├── 03_데이터셋_준비.md          ← KSS 다운로드·전처리·라이선스 가이드
+    └── 04_파인튜닝_가이드.md        ← 전처리·s1·s2 학습·모니터링·트러블슈팅
 ```
 
 > **주의:** `setup.sh` 실행 시 `~/projects/GPT-SoVITS` 에 GPT-SoVITS 본체가
@@ -95,7 +111,8 @@ python scripts/prepare_kss.py --out-dir ~/data/kss_processed
 - [x] 1. 학습 서버 자동 설치 스크립트 ([02_설치_가이드.md](docs/02_설치_가이드.md))
 - [x] 2. 한국어 데이터셋 준비 — KSS 베이스라인 ([03_데이터셋_준비.md](docs/03_데이터셋_준비.md))
       *비상업 검증용. 상용 모델은 라이선스 호환 데이터셋으로 재학습.*
-- [ ] 3. GPT(s1) / SoVITS(s2) 베이스라인 파인튜닝
+- [x] 3. GPT(s1) / SoVITS(s2) 파인튜닝 코드·config·가이드 ([04_파인튜닝_가이드.md](docs/04_파인튜닝_가이드.md))
+      *서버에서 `bash scripts/train_s1.sh` / `train_s2.sh` 실행만 남음.*
 - [ ] 5. 평가 (MOS, CER/WER, RTF)
 - [ ] 6. ONNX export (s1.onnx, s2.onnx)
 - [ ] 7. INT8 양자화 + ONNX Runtime Mobile 검증
