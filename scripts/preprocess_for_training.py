@@ -130,12 +130,25 @@ def main() -> None:
 
     # ---------- 3. semantic token ----------
     if "semantic" not in args.skip:
+        # 3-get-semantic.py 가 hps 파싱을 위해 요구하는 SoVITS base 설정 파일.
+        # GPT-SoVITS v2 → GPT_SoVITS/configs/s2.json
+        # (v2Pro / v2ProPlus 로 업그레이드 시 각각 s2v2Pro.json / s2v2ProPlus.json 로 교체)
+        s2_base_config_map = {
+            "v2": "GPT_SoVITS/configs/s2.json",
+            "v2Pro": "GPT_SoVITS/configs/s2v2Pro.json",
+            "v2ProPlus": "GPT_SoVITS/configs/s2v2ProPlus.json",
+        }
+        version_key = env("VERSION", "v2")
+        s2config_rel = s2_base_config_map.get(version_key, "GPT_SoVITS/configs/s2.json")
+        s2config_path = str(gpt_sovits_dir / s2config_rel)
+
         run_step(
             label="3/3  Semantic token",
             script_rel="GPT_SoVITS/prepare_datasets/3-get-semantic.py",
             env_overrides={
                 **common_env,
                 "pretrained_s2G": env("PRETRAINED_S2G", required=True),
+                "s2config_path": s2config_path,
             },
             gpt_sovits_dir=gpt_sovits_dir,
         )
